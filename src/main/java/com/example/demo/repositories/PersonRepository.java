@@ -1,6 +1,5 @@
 package com.example.demo.repositories;
 
-import com.example.demo.entities.Entity;
 import com.example.demo.entities.Module;
 import com.example.demo.entities.Person;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +18,5 @@ public interface PersonRepository extends CrudRepository<Person,Long> {
 
     @Query("SELECT m FROM Module m INNER JOIN m.students students WHERE students.name=:name")
     Set<Module> findAllModulesByName(@Param("name") String name);
+
 }
