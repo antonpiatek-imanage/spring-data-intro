@@ -75,7 +75,7 @@ class ModulePersonTests extends Specification{
 
     def "Create a Student-Module link"(){
         given: "A module exists"
-        def moduleName = "TesterModuleName"
+        def moduleName = "TesterModuleName2"
         def e1 = moduleRepository.save(new Module(moduleName)) //.save() is crudRepositroy, which is a parent of the ExampleController.
         when: "A Person is created"
         def result = personController.addPerson("StudentName","StudentPhoneNumber",[moduleName] as Set<String>)
@@ -87,6 +87,7 @@ class ModulePersonTests extends Specification{
             println("-----------------------------------------\nTesting\n"+i.name)
         }
     }
+
 
     def "Edit a module's name"(){
         given:
@@ -152,7 +153,31 @@ class ModulePersonTests extends Specification{
 //            results*.id == [e1.id]
 //        and: "same for a native query"
 //            entityRepository.findByChildNameNative("child 1")*.id == [e1.id]
+//    def "Create a Teacher"(){
+//        given :"A Module"
+//        def module = moduleRepository.save(new Module("TesterModuleName")) //.save() is crudRepositroy, which is a parent of the ExampleController.
+//        when: "We add that module ot a student"
+//        def e1 = personController.addPerson("TesterName","TesterPhoneNum",["TesterModuleName"] as Set<String>) //.save() is crudRepositroy, which is a parent of the ExampleController.
+//        then :"it shouldnt crash"
+
 //    }
 
+    def "Edit a person name"(){
+        given: "A Person"
+        def el = personController.addPerson("TesterName2","TesterPhoneNum2",["TesterModuleName"] as Set<String>) //.save() is crudRepositroy, which is a parent of the ExampleController.
+        when: "We try to edit the name"
+        def editedPerson = personController.editPersonName(el.personID,"I hope this name change works")
+        then : "We fecth the person again from the database"
+        def newerDatabaseInstanceOfPerson = personController.findByName("I hope this name change works")
+    }
+
+    def "Edit a person phone number"(){
+        given: "A Person"
+        def el = personController.addPerson("TesterName3","TesterPhoneNum3",["TesterModuleName"] as Set<String>) //.save() is crudRepositroy, which is a parent of the ExampleController.
+        when: "We try to edit the phoneNum"
+        def editedPerson = personController.editPersonPhoneNum(el.personID,"999")
+        then : "We fecth the person again from the database"
+        def newerDatabaseInstanceOfPerson = personController.findByName("999")
+    }
 
 }

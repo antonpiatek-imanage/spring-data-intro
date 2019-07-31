@@ -14,13 +14,17 @@ public class Module {
     @OneToOne(optional = true)
     public Person teacher;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "modules")
     Set<Person> students;
 
     public Module(){}
 
     public Module(String name){
         this.name = name;
+    }
+    public Module(String name, long moduleID){
+        this.name = name;
+        this.moduleID=moduleID;
     }
 
 }
