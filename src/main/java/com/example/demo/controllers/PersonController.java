@@ -19,11 +19,12 @@ public class PersonController {
     PersonServices personServices;
 
 
-    @GetMapping(path = "/findByName")
+    // Working
+    @GetMapping(path = "/findByName",  produces = "application/json")
     public Person findByName(@RequestParam("name") String name){return personServices.findByName(name);}
 
-    @GetMapping(path = "/findall")
-    public Set<Module> findAllModules(String name){return personServices.findAllModules(name);}
+    @GetMapping(path = "/findAllModules", produces = "application/json")
+    public Set<Module> findAllModules(@RequestParam("name") String name){return personServices.findAllModules(name);}
 
     @PostMapping(path="/addPerson", consumes = "application/json", produces = "application/json")
     public Person addPerson(@RequestParam("name") String name, @RequestParam("phonenum") String phoneNum, @RequestParam("modules") Set<String> moduleNames){
