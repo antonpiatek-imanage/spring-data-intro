@@ -88,13 +88,18 @@ class ModulePersonTests extends Specification{
         }
     }
 
-//    def "Create a Teacher"(){
-//        given :"A Module"
-//        def module = moduleRepository.save(new Module("TesterModuleName")) //.save() is crudRepositroy, which is a parent of the ExampleController.
-//        when: "We add that module ot a student"
-//        def e1 = personController.addPerson("TesterName","TesterPhoneNum",["TesterModuleName"] as Set<String>) //.save() is crudRepositroy, which is a parent of the ExampleController.
-//        then :"it shouldnt crash"
-//    }
+    def "Create a Teacher"(){
+        given :"A Module"
+        def module = moduleRepository.save(new Module("TesterModuleName47")) //.save() is crudRepositroy, which is a parent of the ExampleController.
+        when: "We add that module ot a student"
+        def el = personController.addPerson("TesterName92","TesterPhoneNum",["TesterModuleName47"] as Set<String>) //.save() is crudRepositroy, which is a parent of the ExampleController.
+        then :"We set the module to have that teacher assigned to it"
+        module.setTeacher(el)
+        moduleRepository.save(module)
+        then: "We find find that module in the database"
+        def updateModule = moduleRepository.findByName("TesterModuleName47")
+        updateModule.teacher.personID == el.personID
+    }
 
     def "Edit a person name"(){
         given: "A Person"

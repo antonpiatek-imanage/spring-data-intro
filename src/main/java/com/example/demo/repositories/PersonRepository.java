@@ -22,16 +22,9 @@ public interface PersonRepository extends CrudRepository<Person,Long> {
     @Query("SELECT p FROM Person p WHERE p.name =:name")
     Person findByName(@Param("name") String name);
 
-//    @Query(nativeQuery = true, value= "SELECT m.* FROM Module m " +
-//            "INNER JOIN PERSON_MODULES pm ON m.moduleID = pm.MODULES_MODULEID " +
-//            "INNER JOIN PERSON p ON p.personID = pm.PERSON_PERSONID" +
-//            " WHERE p.name=:name")
-    @Query(" FROM Module m "
-    )
+    @Query("SELECT m FROM Person p JOIN p.modules m WHERE p.name=:name")
     Set<Module> findAllModulesByName(@Param("name") String name);
 
-//    @Query("SELECT p FROM Person p WHERE p.name =:name")
-//    Set<Module> findAllModulesByName(@Param("name") String name);
 
     @Transactional
     @Modifying

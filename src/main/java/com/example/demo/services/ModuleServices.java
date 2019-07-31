@@ -11,6 +11,8 @@ public class ModuleServices {
     @Autowired
     ModuleRepository moduleRepository;
 
+    @Autowired
+    PersonServices personServices;
 
     public Module findByName(String name){return moduleRepository.findByName(name);}
 
@@ -18,8 +20,10 @@ public class ModuleServices {
 
     public Module addModule(String name, String teacherName){
         Module module = new Module(name);
-        moduleRepository.save(module);
+        module.setTeacher(personServices.findByName(teacherName));
 
+        moduleRepository.save(module);
         return moduleRepository.findByName(name);
     }
+
 }

@@ -27,4 +27,7 @@ public class Module {
         this.moduleID=moduleID;
     }
 
+    public void setTeacher(Person teacher) {
+        this.teacher = teacher;
+    }
 }

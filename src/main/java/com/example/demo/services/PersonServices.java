@@ -41,6 +41,7 @@ public class PersonServices {
         for(String str:moduleNames){
 //             md = moduleServices.findByName(str); //TODO shouldnt be needed
 //             person.addModule(md);
+            //Module module = moduleServices.findByName(str);
             person.addModule(moduleServices.findByName(str));
         }
 
