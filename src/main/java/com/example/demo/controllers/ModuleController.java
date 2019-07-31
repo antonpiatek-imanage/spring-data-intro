@@ -21,6 +21,7 @@ public class ModuleController {
     public Module findByTeacherName(@RequestParam("teacher_name") String name){return moduleServices.findByTeacherName(name);}
     @PostMapping(path = "/addModule")
     public Module addModule(@RequestParam("name") String name, @RequestParam("teacher_name") String teacherName){return moduleServices.addModule(name,teacherName);}
-
+    @PutMapping(path="/editModuleName", produces = "application/json")
+    public Module editModuleName(@RequestParam("currName") String curr_name, @RequestParam("newName") String new_name){return moduleServices.editModuleName(curr_name, new_name);}
 
 }

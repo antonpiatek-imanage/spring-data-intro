@@ -21,7 +21,11 @@ public class PersonServices {
 
     public Person findByName(String name){return personRepository.findByName(name);}
 
-    public Set<Module> findAllModules(String name){return personRepository.findAllModulesByName(name);}
+    public Set<Module> findAllModules(String name)
+    {
+        Set<Module> list = personRepository.findAllModulesByName(name);
+        return personRepository.findAllModulesByName(name);
+    }
 
     public Person addPerson(String name, String phoneNum, Set<String> moduleNames){
         Person person = new Person(name,phoneNum);
@@ -30,9 +34,7 @@ public class PersonServices {
         for(String str:moduleNames){
              md = moduleServices.findByName(str);
              person.addModule(md);
-            //person.addModule(moduleServices.findByName(str));
         }
-
         personRepository.save(person);
 
         //this is done (instead of just returning person) because the unique id is only generated when the person is stored in database.

@@ -88,6 +88,18 @@ class ModulePersonTests extends Specification{
         }
     }
 
+    def "Edit a module's name"(){
+        given:
+        def moduleName = "Mod1"
+        def e1 = moduleRepository.save(new Module(moduleName))
+
+        when:
+        def result = moduleController.editModuleName(moduleName, "Mod2")
+
+        then:
+        result.moduleID == e1.moduleID
+    }
+
 
 
 //    def "Example queries"(){
