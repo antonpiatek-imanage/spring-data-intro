@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
-@RestController("/api/module")
+@RestController
 @RequestMapping(value = "/api/module")
 public class ModuleController {
 
@@ -15,11 +15,12 @@ public class ModuleController {
     ModuleServices moduleServices;
 
 
-    public Module findByName(String name){return moduleServices.findByName(name);}
-
-    public Module findByTeacherName(String name){return moduleServices.findByTeacherName(name);}
-
-    public Module addModule(String name, String teacherName){return moduleServices.addModule(name,teacherName);}
+    @GetMapping(path = "/findByName", produces = "application/json")
+    public Module findByName(@RequestParam("name") String name){return moduleServices.findByName(name);}
+    @GetMapping(path = "/findByTeacherName", produces = "application/json")
+    public Module findByTeacherName(@RequestParam("teacher_name") String name){return moduleServices.findByTeacherName(name);}
+    @PostMapping(path = "/addModule")
+    public Module addModule(@RequestParam("name") String name, @RequestParam("teacher_name") String teacherName){return moduleServices.addModule(name,teacherName);}
 
 
 }

@@ -4,6 +4,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -24,6 +26,7 @@ public class Person {
     public Person(String name, String phoneNum){
         this.name = name;
         this.phoneNum = phoneNum;
+        modules = new HashSet<Module>();
     }
 
     public void addModule(Module module){
