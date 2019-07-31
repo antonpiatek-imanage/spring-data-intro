@@ -21,6 +21,7 @@ public class Person {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     Set<Module> modules;
 
+
     public Person(){}
 
     public Person(String name, String phoneNum){

@@ -75,7 +75,7 @@ class ModulePersonTests extends Specification{
 
     def "Create a Student-Module link"(){
         given: "A module exists"
-        def moduleName = "TesterModuleName"
+        def moduleName = "TesterModuleName2"
         def e1 = moduleRepository.save(new Module(moduleName)) //.save() is crudRepositroy, which is a parent of the ExampleController.
         when: "A Person is created"
         def result = personController.addPerson("StudentName","StudentPhoneNumber",[moduleName] as Set<String>)
@@ -88,59 +88,30 @@ class ModulePersonTests extends Specification{
         }
     }
 
-
-
-//    def "Example queries"(){
-//        given: "two entities"
-//            def e1 = entityRepository.save([name: "test1"] as Entity)
-//            def e2 = entityRepository.save([name: "test2"] as Entity)
-//        expect: "lookup by name to return values"
-//            entityRepository.findByName("test1")*.id == [e1.id] //el is the varaible name that has name = "test1"
-//            entityRepository.findByName(e2.name)*.id == [e2.id]
-//
-//        and: "wildcard search"
-//            entityRepository.findByNameLike("test%")*.id == [e1.id,e2.id] //The set return will equal the set [el.id,e2,id]
-//        and: "ordered search"
-//            entityRepository.findByNameLikeOrderByIdAsc ("test%")*.id        == [e1.id,e2.id]
-//            entityRepository.findByNameLikeOrderByIdDesc("test%")*.id        == [e2.id,e1.id]
-//            entityRepository.findByNameLikeOrderByIdDesc("test%")*.id as Set == [e1.id,e2.id] as Set
-//        and: "first only"
-//            entityRepository.findFirstByNameLikeOrderByIdAsc("test%").id == e1.id
-//    }
-//
-//    def "Example delete"(){
-//        given: "two entities"
-//            def e1 = entityRepository.save([name: "deleteMe"] as Entity)
-//            def e2 = entityRepository.save([name: "deleteMe"] as Entity)
-//        expect: "Both to exit"
-//            entityRepository.findByNameLike("deleteMe%")*.id == [e1.id,e2.id]
-//        when: "delete called for e1"
-//            entityRepository.delete(e1)
-//        then: "expect it to be gone"
-//            entityRepository.findByNameLike("deleteMe%")*.id == [e2.id]
-//            entityRepository.findById(e1.id) == Optional.empty()
-//            ! entityRepository.existsById(e1.id)
-//        when: "delete called for r2"
-//            entityRepository.deleteById(e2.id)
-//        then: "expect it to be gone"
-//            entityRepository.findByNameLike("deleteMe%")*.id == []
-//    }
-//
-//
-//    def "Example childEntities"(){
-//        given: "An entity with two children"
-//            def e1 = [name: "deleteMe"] as Entity
-//            e1.children=[ [parent:e1, name:"child 1"] as ChildEntity, [parent:e1, name:"child 2"] as ChildEntity]
-//            e1 = entityRepository.save(e1)
-//        expect: "Both to exit"
-//            entityRepository.findById(e1.id).value.children*.name.sort() == ["child 1", "child 2"]
-//        when: "Searching with a query"
-//            def results = entityRepository.findByChildName("child 1")
-//        then: "expect parent and children returned"
-//            results*.id == [e1.id]
-//        and: "same for a native query"
-//            entityRepository.findByChildNameNative("child 1")*.id == [e1.id]
+//    def "Create a Teacher"(){
+//        given :"A Module"
+//        def module = moduleRepository.save(new Module("TesterModuleName")) //.save() is crudRepositroy, which is a parent of the ExampleController.
+//        when: "We add that module ot a student"
+//        def e1 = personController.addPerson("TesterName","TesterPhoneNum",["TesterModuleName"] as Set<String>) //.save() is crudRepositroy, which is a parent of the ExampleController.
+//        then :"it shouldnt crash"
 //    }
 
+    def "Edit a person name"(){
+        given: "A Person"
+        def el = personController.addPerson("TesterName2","TesterPhoneNum2",["TesterModuleName"] as Set<String>) //.save() is crudRepositroy, which is a parent of the ExampleController.
+        when: "We try to edit the name"
+        def editedPerson = personController.editPersonName(el.personID,"I hope this name change works")
+        then : "We fecth the person again from the database"
+        def newerDatabaseInstanceOfPerson = personController.findByName("I hope this name change works")
+    }
+
+    def "Edit a person phone number"(){
+        given: "A Person"
+        def el = personController.addPerson("TesterName3","TesterPhoneNum3",["TesterModuleName"] as Set<String>) //.save() is crudRepositroy, which is a parent of the ExampleController.
+        when: "We try to edit the phoneNum"
+        def editedPerson = personController.editPersonPhoneNum(el.personID,"999")
+        then : "We fecth the person again from the database"
+        def newerDatabaseInstanceOfPerson = personController.findByName("999")
+    }
 
 }
