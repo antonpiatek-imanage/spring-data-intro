@@ -2,7 +2,6 @@ package com.example.demo.services;
 
 import com.example.demo.entities.Module;
 import com.example.demo.entities.Person;
-import com.example.demo.repositories.ModuleRepository;
 import com.example.demo.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,11 +36,7 @@ public class PersonServices {
     public Person addPerson(String name, String phoneNum, Set<String> moduleNames){
         Person person = new Person(name,phoneNum);
         person = personRepository.save(person);
-        Module md;
         for(String str:moduleNames){
-//             md = moduleServices.findByName(str); //TODO shouldnt be needed
-//             person.addModule(md);
-            //Module module = moduleServices.findByName(str);
             person.addModule(moduleServices.findByName(str));
         }
 
