@@ -30,4 +30,8 @@ public class Module {
     public void setTeacher(Person teacher) {
         this.teacher = teacher;
     }
+
+    public long getModuleID() {
+        return moduleID;
+    }
 }

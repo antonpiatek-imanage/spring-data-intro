@@ -34,4 +34,6 @@ public class Person {
         this.modules.add(module);
     }
 
+    public void deleteModule(Module module){this.modules.remove(module);}
+
 }

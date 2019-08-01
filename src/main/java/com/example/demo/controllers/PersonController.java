@@ -19,19 +19,41 @@ public class PersonController {
     PersonServices personServices;
 
 
-    // Working
+    //region GET
     @GetMapping(path = "/findByName",  produces = "application/json")
     public Person findByName(@RequestParam("name") String name){return personServices.findByName(name);}
 
     @GetMapping(path = "/findAllModules", produces = "application/json")
     public Set<Module> findAllModules(@RequestParam("name") String name){return personServices.findAllModules(name);}
 
+    //endregion
+
+
+    //region POST
     @PostMapping(path="/addPerson", consumes = "application/json", produces = "application/json")
-    public Person addPerson(@RequestParam("name") String name, @RequestParam("phonenum") String phoneNum, @RequestParam("modules") Set<String> moduleNames){
-        return personServices.addPerson(name,phoneNum,moduleNames);}
+    public Person addPerson(@RequestParam("name") String name, @RequestParam("phonenum") String phoneNum, @RequestParam("modules") Set<String> moduleNames){ return personServices.addPerson(name,phoneNum,moduleNames);}
 
-    public Person editPersonName(long id, String name){return personServices.editPersonName(id,name);}
+    //TODO try this out yourself
+    public Person addPersonModules(long id, Set<String> moduleNames){return personServices.addModulesToExistingPerson(id, moduleNames);}
+    //endregion
 
-    //Left undone for a reason, try to add API implementation yourself
+
+    //region PUT
+    @PutMapping(path="/editPersonName", consumes = "application/json", produces = "application/json")
+    public Person editPersonName(@RequestParam("id") long id,@RequestParam("name") String name){return personServices.editPersonName(id,name);}
+
+    //TODO try this out yourself
     public Person editPersonPhoneNum(long id, String phoneNum){return personServices.editPersonPhoneNum(id,phoneNum);}
+    //endregion
+
+    //region DELETE
+    @DeleteMapping(path="/deletePerson", consumes = "application/json", produces="application/json")
+    public Person deletePerson(@RequestParam("id") long id){return personServices.deletePerson(id);}
+
+    //TODO try this yourself
+    public Set<Module> deleteModules(long id, Set<String> moduleNames){return personServices.deleteModules(id, moduleNames);}
+
+    //endregion
+
+
 }

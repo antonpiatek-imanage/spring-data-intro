@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -16,11 +17,11 @@ import java.util.Set;
 public interface PersonRepository extends CrudRepository<Person,Long> {
 
 
-    Person findById(long id);
+    Optional<Person> findById(long id);
 
 
     @Query("SELECT p FROM Person p WHERE p.name =:name")
-    Person findByName(@Param("name") String name);
+    Optional<Person> findByName(@Param("name") String name);
 
     @Query("SELECT m FROM Person p JOIN p.modules m WHERE p.name=:name")
     Set<Module> findAllModulesByName(@Param("name") String name);
