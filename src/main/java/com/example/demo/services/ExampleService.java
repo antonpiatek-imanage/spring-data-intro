@@ -1,18 +1,16 @@
 package com.example.demo.services;
 
-import com.example.demo.entities.Entity;
-import com.example.demo.repositories.EntityRepository;
+import com.example.demo.entities.ParentEntity;
+import com.example.demo.repositories.ParentEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ExampleService {
 
-    @Autowired EntityRepository entityRepository;
+    @Autowired ParentEntityRepository parentEntityRepository;
 
-    public Entity findById(Long id) {
-        return entityRepository.findById(id).orElse(null);
+    public ParentEntity findById(Long id) {
+        return parentEntityRepository.findById(id).orElse(null);
     }
 }

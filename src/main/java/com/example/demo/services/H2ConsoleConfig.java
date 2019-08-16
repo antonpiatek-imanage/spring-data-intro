@@ -11,14 +11,15 @@ import java.sql.SQLException;
 public class H2ConsoleConfig {
 
     static private boolean h2Started;
-    
-    
+
     @PostConstruct
     public void init() {
-        if(!h2Started) { h2_Console(); }
+        if (!h2Started) {
+            h2_Console();
+        }
     }
-    
-    @Profile({ "test", "h2-console" })
+
+    @Profile({"test", "h2-console"})
     public Thread h2_Console() {
         h2Started = true;
         Thread thread = new Thread(() -> {

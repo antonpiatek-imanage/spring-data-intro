@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @javax.persistence.Entity
-public class Entity {
+public class ParentEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     public Long id;
