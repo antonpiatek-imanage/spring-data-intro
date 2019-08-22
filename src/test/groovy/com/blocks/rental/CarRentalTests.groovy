@@ -108,7 +108,7 @@ class CarRentalTests extends Specification {
         given: "an entity"
         def e1 = locationRepository.save(new Location("UK")) //.save() is crudRepositroy, which is a parent of the ExampleController.
         when: "controller is called with an id"
-        def result = mockMvc.perform(get("/location?id=$e1.id")).andReturn().response.contentAsString
+        def result = mockMvc.perform(get("/location/$e1.id")).andReturn().response.contentAsString
         def json = new JsonSlurper().parseText(result)
         then: "result is an entity with an id"
         json.id == e1.id
@@ -149,7 +149,7 @@ class CarRentalTests extends Specification {
 
         when: "values changed, and put back in repo"
         result.country = "USA"
-        mockMvc.perform(post(String.format("/location/edit?id=$result.id&country=$result.country")))
+        mockMvc.perform(post(String.format("/location/$result.id/edit?country=$result.country")))
         then: "original value has changed"
         locationService.findById(id).country.equals("USA")
 
@@ -184,7 +184,7 @@ class CarRentalTests extends Specification {
         repoReturned.id == id
 
         then: "result can be deleted in repository"
-        def returned = mockMvc.perform(post("/location/delete?id=$id")).andReturn().response.contentAsString
+        def returned = mockMvc.perform(post("/location/$id/delete")).andReturn().response.contentAsString
         def json = new JsonSlurper().parseText(returned)
         then: "result should not be in the repository"
         json.id != locationService.findById(id)
@@ -250,10 +250,10 @@ class CarRentalTests extends Specification {
 
     def "Test Get Customer REST"() {
         given: "an entity"
-        name = "John Smith"
+        def name = "John Smith"
         def e1 = customerRepository.save(new Customer(name)) //.save() is crudRepositroy, which is a parent of the ExampleController.
         when: "controller is called with an id"
-        def result = mockMvc.perform(get("/customer?id=$e1.id")).andReturn().response.contentAsString
+        def result = mockMvc.perform(get("/customer/$e1.id")).andReturn().response.contentAsString
         def json = new JsonSlurper().parseText(result)
         then: "result is an entity with an id"
         json.id == e1.id
@@ -294,7 +294,7 @@ class CarRentalTests extends Specification {
 
         when: "values changed, and put back in repo"
         result.name = "Joe Smyth"
-        mockMvc.perform(post(String.format("/customer/edit?id=$result.id&name=$result.name")))
+        mockMvc.perform(post(String.format("/customer/$result.id/edit?name=$result.name")))
         then: "original value has changed"
         customerService.findById(id).name.equals("Joe Smyth")
 
@@ -329,7 +329,7 @@ class CarRentalTests extends Specification {
         repoReturned.id == id
 
         then: "result can be deleted in repository"
-        def returned = mockMvc.perform(post("/customer/delete?id=$id")).andReturn().response.contentAsString
+        def returned = mockMvc.perform(post("/customer/$id/delete")).andReturn().response.contentAsString
         def json = new JsonSlurper().parseText(returned)
         then: "result should not be in the repository"
         json.id != customerService.findById(id)
@@ -348,11 +348,12 @@ class CarRentalTests extends Specification {
         def registration = "ABC123"
         def manufacturer = "Ford"
         def model = "Type"
-        def transmission = "manual"
-        def category = "car"
-
+        def transmission = Car.Transmission.manual
+        def category = Car.Category.car
+        def location = locationService.add("USA")
+        def location_id = location.id
         when: "controller is called with a name"
-        def result = rentalController.putCar(name, registration, manufacturer, model, transmission, category)
+        def result = rentalController.putCar(name, registration, manufacturer, model, transmission, category, location_id)
         then: "result is an entity with an id"
         result.id > 0
         def id = result.id
@@ -369,13 +370,14 @@ class CarRentalTests extends Specification {
         def registration = "ABC123"
         def manufacturer = "Ford"
         def model = "Type"
-        def transmission = "manual"
-        def category = "car"
-
+        def transmission = Car.Transmission.manual
+        def category = Car.Category.car
+        def location = locationService.add("USA")
+        def location_id = location.id
         when: "REST is called with a name"
         def result = mockMvc.perform(post(
                 "/car?name=$name&registration=$registration&manufacturer=$manufacturer&model=$model&" +
-                        "transmission=$transmission&category=$category")).andReturn().response.contentAsString
+                        "transmission=$transmission&category=$category&locationID=$location_id")).andReturn().response.contentAsString
         def json = new JsonSlurper().parseText(result)
 
         then: "result is an entity with an id"
@@ -396,10 +398,11 @@ class CarRentalTests extends Specification {
         def registration = "ABC123"
         def manufacturer = "Ford"
         def model = "Type"
-        def transmission = "manual"
-        def category = "car"
+        def transmission = Car.Transmission.manual
+        def category = Car.Category.car
+        def location = locationService.add("USA")
 
-        def e1 = carRepository.save(new Car(name, registration, manufacturer, model, transmission, category))
+        def e1 = carRepository.save(new Car(name, registration, manufacturer, model, transmission, category, location))
         when: "controller is called with an id"
         def result = rentalController.getCarById(e1.id)
         then: "result is an entity with an id"
@@ -426,12 +429,14 @@ class CarRentalTests extends Specification {
         def registration = "ABC123"
         def manufacturer = "Ford"
         def model = "Type"
-        def transmission = "manual"
-        def category = "car"
+        def transmission = Car.Transmission.manual
+        def category = Car.Category.car
 
-        def e1 = carRepository.save(new Car(name, registration, manufacturer, model, transmission, category)) //.save() is crudRepositroy, which is a parent of the ExampleController.
+        def location = locationService.add("USA")
+
+        def e1 = carRepository.save(new Car(name, registration, manufacturer, model, transmission, category, location))
         when: "controller is called with an id"
-        def result = mockMvc.perform(get("/car?id=$e1.id")).andReturn().response.contentAsString
+        def result = mockMvc.perform(get("/car/$e1.id")).andReturn().response.contentAsString
         def json = new JsonSlurper().parseText(result)
         then: "result is an entity with an id"
         json.id == e1.id
@@ -445,11 +450,14 @@ class CarRentalTests extends Specification {
         def registration = "ABC123"
         def manufacturer = "Ford"
         def model = "Type"
-        def transmission = "manual"
-        def category = "car"
+        def transmission = Car.Transmission.manual
+        def category = Car.Category.car
 
-        when: "controller is called with car info"
-        def result = rentalController.putCar(name, registration, manufacturer, model, transmission, category)
+        def location = locationService.add("USA")
+        def location_id = location.id
+        when: "controller is called with a country"
+
+        def result = rentalController.putCar(name, registration, manufacturer, model, transmission, category, location_id)
         then: "result is an entity with an id"
         result.id > 0
         def id = result.id
@@ -459,7 +467,7 @@ class CarRentalTests extends Specification {
 
         when: "values can be changed, and put back in repo"
         result.name="Joe Smyth"
-        rentalController.editCar(id, result.name, result.manufacturer, result.model, result.transmission, result.category)
+        rentalController.editCar(id, result.name, result.manufacturer, result.model, transmission, category)
         then: "original value has been changed"
         carService.findById(id).name.equals("Joe Smyth")
 
@@ -472,11 +480,12 @@ class CarRentalTests extends Specification {
         def registration = "ABC123"
         def manufacturer = "Ford"
         def model = "Type"
-        def transmission = "manual"
-        def category = "car"
-
+        def transmission = Car.Transmission.manual
+        def category = Car.Category.car
+        def location = locationService.add("USA")
+        def location_id = location.id
         when: "controller is called with a country"
-        def result = rentalController.putCar(name, registration, manufacturer, model, transmission, category)
+        def result = rentalController.putCar(name, registration, manufacturer, model, transmission, category, location_id)
         then: "result is an entity with an id"
         result.id > 0
         def id = result.id
@@ -486,7 +495,7 @@ class CarRentalTests extends Specification {
 
         when: "values changed, and put back in repo"
         result.name = "Joe Smyth"
-        mockMvc.perform(post(String.format("/car/edit?id=$result.id&name=$result.name")))
+        mockMvc.perform(post(String.format("/car/$result.id/edit?&name=$result.name")))
         then: "original value has changed"
         carService.findById(id).name.equals("Joe Smyth")
 
@@ -499,11 +508,13 @@ class CarRentalTests extends Specification {
         def registration = "ABC123"
         def manufacturer = "Ford"
         def model = "Type"
-        def transmission = "manual"
-        def category = "car"
+        def transmission = Car.Transmission.manual
+        def category = Car.Category.car
+        def location = locationService.add("USA")
+        def location_id = location.id
 
         when: "controller is called with a car"
-        def result = rentalController.putCar(name, registration, manufacturer, model, transmission, category)
+        def result = rentalController.putCar(name, registration, manufacturer, model, transmission, category, location_id)
         then: "result is an entity with an id"
         result.id > 0
         def id = result.id
@@ -523,11 +534,12 @@ class CarRentalTests extends Specification {
         def registration = "ABC123"
         def manufacturer = "Ford"
         def model = "Type"
-        def transmission = "manual"
-        def category = "car"
-
+        def transmission = Car.Transmission.manual
+        def category = Car.Category.car
+        def location = locationService.add("USA")
+        def location_id = location.id
         when: "controller is called with a country"
-        def result = rentalController.putCar(name, registration, manufacturer, model, transmission, category)
+        def result = rentalController.putCar(name, registration, manufacturer, model, transmission, category, location_id)
         then: "result is an entity with an id"
         result.id > 0
         def id = result.id
@@ -536,7 +548,7 @@ class CarRentalTests extends Specification {
         repoReturned.id == id
 
         then: "result can be deleted in repository"
-        def returned = mockMvc.perform(post("/car/delete?id=$id")).andReturn().response.contentAsString
+        def returned = mockMvc.perform(post("/car/$id/delete")).andReturn().response.contentAsString
         def json = new JsonSlurper().parseText(returned)
         then: "result should not be in the repository"
         json.id != carService.findById(id)

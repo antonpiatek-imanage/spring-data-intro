@@ -1,11 +1,6 @@
 package com.blocks.rental.entities;
 
-import com.blocks.rental.controllers.RentalController;
-import com.example.demo.entities.ParentEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Entity
@@ -19,8 +14,10 @@ public class Car {
     public String registration;
     public String manufacturer;
     public String model;
-    public String transmission;
-    public String category;
+    @Enumerated(EnumType.STRING)
+    public Transmission transmission;
+    @Enumerated(EnumType.STRING)
+    public Category category;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "car_link", fetch = FetchType.EAGER)
     Set<Booking> bookings;
@@ -29,8 +26,16 @@ public class Car {
     @ManyToOne(optional = false)
     public Location location;
 
-    public Car(String name, String registration, String manufacturer, String model, String transmission, String category,
-               Location location){
+
+    public enum Transmission{
+        none, manual, automatic
+    }
+    public enum Category{
+        none, car, van, lorry, tractor, motorbike
+    }
+
+    public Car(String name, String registration, String manufacturer, String model, Transmission transmission,
+               Category category, Location location){
         this.name = name;
         this.registration = registration;
         this.manufacturer = manufacturer;
@@ -39,6 +44,13 @@ public class Car {
         this.category = category;
         this.location = location;
     }
+
+    @PreRemove
+    private void removeFromSets(){
+        location.getCarsInLocation().remove(this);
+
+    }
+
     public Car(){
 
     }

@@ -1,7 +1,7 @@
 package com.blocks.rental.repositories;
 import com.blocks.rental.entities.Booking;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface BookingRepository extends CrudRepository<Booking, Long>{
+public interface BookingRepository extends PagingAndSortingRepository<Booking, Long> {
 
 }

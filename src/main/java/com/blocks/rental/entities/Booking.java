@@ -14,11 +14,11 @@ public class Booking {
     public Date endDate;
 
     @ManyToOne(optional = false)
-    Car car_link;
+    public Car car_link;
     @ManyToOne(optional = false)
-    Location location_link;
+    public Location location_link;
     @ManyToOne(optional = false)
-    Customer customer_link;
+    public Customer customer_link;
 
 
     public Booking(Date startDate, Date endDate, Car car_link, Location location_link, Customer customer_link){
@@ -33,6 +33,12 @@ public class Booking {
 
     }
 
+    @PreRemove
+    private void removeFromSets(){
+        car_link.bookings.remove(this);
+        customer_link.bookings.remove(this);
+        location_link.getBookingsInLocation().remove(this);
+    }
 
 }
 
