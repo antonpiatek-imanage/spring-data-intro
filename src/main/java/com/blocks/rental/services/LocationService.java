@@ -2,8 +2,6 @@ package com.blocks.rental.services;
 
 import com.blocks.rental.dtos.LocationDetailedDto;
 import com.blocks.rental.dtos.LocationDto;
-import com.blocks.rental.dtos.SortOrderEnum;
-import com.blocks.rental.entities.Booking;
 import com.blocks.rental.entities.Location;
 import com.blocks.rental.pages.RentalPageable;
 import com.blocks.rental.repositories.LocationRepository;
@@ -12,9 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import com.blocks.rental.mapper.LocationMapper;
 
-import java.awt.print.Pageable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 @Service

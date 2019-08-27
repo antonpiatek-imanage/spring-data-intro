@@ -10,6 +10,8 @@ public class Booking {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) public long id;
 
+
+
     public Date startDate;
     public Date endDate;
 

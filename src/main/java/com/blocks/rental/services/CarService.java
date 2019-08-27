@@ -70,10 +70,10 @@ public class CarService {
         return car;
     }
 
-    public boolean delete(long id) {
+    public Car delete(long id) {
         Car car = this.findById(id);
         carRepository.delete(car);
-        return true;
+        return car;
     }
 
     public CarDto mapToDto(Car car) {

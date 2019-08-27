@@ -1,18 +1,12 @@
 package com.blocks.rental.controllers;
 
 
-import com.blocks.rental.pages.RentalPageable;
 import com.blocks.rental.dtos.*;
 import com.blocks.rental.entities.*;
-import com.blocks.rental.repositories.LocationRepository;
 import com.blocks.rental.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.stream.Stream;
 
 @RestController
 public class RentalController {
@@ -26,7 +20,7 @@ public class RentalController {
     @GetMapping(path="/locations")
     public ArrayList<LocationDto> getLocations(@RequestParam(value="page", defaultValue = "0") int page,
                                          @RequestParam(value="size", defaultValue = "25") int size,
-                                         @RequestParam(value="sort", defaultValue = "country") String sort,
+                                         @RequestParam(value="sort", defaultValue = "id") String sort,
                                          @RequestParam(value="ascending", defaultValue = "true") boolean ascending){
         return locationService.findPageToOutput(page,size,sort,ascending);
     }
@@ -66,7 +60,7 @@ public class RentalController {
    @GetMapping(path="/customers")
     public ArrayList<CustomerDto> getCustomers(@RequestParam(value="page", defaultValue = "0") int page,
                                          @RequestParam(value="size", defaultValue = "25") int size,
-                                         @RequestParam(value="sort", defaultValue = "name") String sort,
+                                         @RequestParam(value="sort", defaultValue = "id") String sort,
                                          @RequestParam(value="ascending", defaultValue = "true") boolean ascending){
         return customerService.findPageToOutput(page, size, sort, ascending);
     }
@@ -108,7 +102,7 @@ public class RentalController {
     @GetMapping(path="/cars")
     public ArrayList<CarDto> getCars(@RequestParam(value="page", defaultValue = "0") int page,
                                          @RequestParam(value="size", defaultValue = "25") int size,
-                                         @RequestParam(value="sort", defaultValue = "name") String sort,
+                                         @RequestParam(value="sort", defaultValue = "id") String sort,
                                          @RequestParam(value="ascending", defaultValue = "true") boolean ascending){
         return carService.findPageToOutput(page, size, sort, ascending);
     }
@@ -146,9 +140,8 @@ public class RentalController {
     }
 
     @PostMapping(path = "/car/{id}/delete")
-    public boolean deleteCar(@PathVariable(value="id") long id){
-        boolean returned = carService.delete(id);
-        return returned;
+    public CarDto deleteCar(@PathVariable(value="id") long id){
+        return carService.mapToDto(carService.delete(id));
     }
 
 ///////////////////////////////////////////////////////
@@ -226,7 +219,7 @@ public class RentalController {
         return carsDto;
     }
 
-    @GetMapping(path="/location/summary")
+    @GetMapping(path="/locations/summary")
     public List<LocationSummary> getLocationSummary(){
 
         Iterable<Location> locationIterable = locationService.findAllLocations();
