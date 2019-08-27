@@ -1171,4 +1171,40 @@ class CarRentalTests extends Specification {
         result*.id.contains((int)car2.id)
 
     }
+
+    def "Test No Location Car"(){
+        given: "entities"
+        when: "car is added without location"
+        def car = rentalController.getLocationCars(0)
+        then: "result should be null"
+        car == null
+    }
+
+    def "Test Bad Bookings"(){
+        given: "entities"
+
+        def name = "John Smith"
+        def registration = "ABC123"
+        def manufacturer = "Ford"
+        def model = "Type"
+        def transmission = Car.Transmission.manual
+        def category = Car.Category.car
+        def location = locationService.add("USA")
+        def customer = customerService.add("John Smith")
+        def location_id = location.id
+
+        def car = rentalController.putCar(name, registration, manufacturer, model, transmission, category, location_id)
+
+        def customer_id = customer.id
+        def car_id = car.id
+
+        def startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2019-02-01")
+        def endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2019-02-04")
+
+        when: "controller is called with a name"
+        def booking = rentalController.createBooking(car_id, customer_id, startDate, endDate)
+        then: "result is an entity with an id"
+        booking.id > 0
+        def id = booking.id
+    }
 }
