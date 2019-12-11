@@ -39,7 +39,7 @@ public class Location {
         return cars;
     }
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "location")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "location", fetch = FetchType.LAZY)
     Set<Car> cars;
 }
