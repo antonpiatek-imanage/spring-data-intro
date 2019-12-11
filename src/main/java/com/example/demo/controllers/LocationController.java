@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.entities.Car;
 import com.example.demo.entities.Location;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.services.LocationService;
@@ -8,6 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @RestController("/api/locations")
 @RequestMapping(value = "/api/locations")
@@ -47,4 +52,19 @@ public class LocationController {
             locationService.deleteLocation(id);
         }
     }
+
+//    @GetMapping(path = "/list")
+//    public List<Location> listAll(){
+//        return locationService.findAll();
+//    }
+
+    @GetMapping(path = "/list/summary")
+    public List<String> listAllSummary() {
+        List<Location> locations = locationService.findAll();
+        List<String> locationSummary = new ArrayList<>();
+        locations.forEach(location -> locationSummary.add(location.getCountry()));
+        return locationSummary;
+    }
+
+
 }

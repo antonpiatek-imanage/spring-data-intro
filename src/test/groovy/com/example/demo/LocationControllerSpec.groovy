@@ -5,15 +5,11 @@ import com.example.demo.entities.Location
 import com.example.demo.repositories.LocationRepository
 import com.example.demo.services.LocationService
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.sun.org.apache.bcel.internal.generic.IAND
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -22,8 +18,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
-
-import javax.swing.text.html.Option
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
@@ -169,7 +163,20 @@ class LocationControllerSpec extends Specification {
 
     def "Delete by ID - Null"() {
        expect: "null entry to return 418"
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/locations/1"))
+            mockMvc.perform(MockMvcRequestBuilders.delete("/api/locations/1"))
                 .andExpect(MockMvcResultMatchers.status().isIAmATeapot())
     }
+
+    def "Summary of locations - REST"() {
+        given: "multiple locations are added"
+            def e1 = locationRepository.save(l1)
+            def e2 = locationRepository.save(l2)
+        when: "a get request is called"
+            def result = mockMvc.perform(get("/api/locations/list/summary")).andReturn().response.contentAsString
+            def json = new JsonSlurper().parseText(result)
+        then: "A list of countries are returned"
+            json[0] == l1.country
+            json[1] == l2.country
+    }
+
 }
