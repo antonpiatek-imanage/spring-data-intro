@@ -19,5 +19,5 @@ public interface LocationRepository extends CrudRepository<Location, Long>, Pagi
     Page<Location> findAll(Pageable pageable);
 
 //    @EntityGraph(value = "Location")
-//    List<Location> findAll();
+    List<Location> findAll();
 }
